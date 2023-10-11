@@ -12,23 +12,23 @@ type User struct {
 }
 
 func GetUserInfo(maps interface{}) (user User) {
-	DB.Where(maps).Find(&user)
+	client.Table("users").Where(maps).Find(&user)
 	return
 }
 
 func ValidUserInfo(name, password string) bool {
 	var user User
 	pass := base64.StdEncoding.EncodeToString([]byte(password))
-	DB.Select("id").Where("name = ? and password = ?", name, pass).First(&user)
+	client.Table("users").Select("id").Where("name = ? and password = ?", name, pass).First(&user)
 
-	return user.ID > 0
+	return user.Id > 0
 }
 
 func RegisterUser(name, password, mobile, email string) bool {
 
 	pass := base64.StdEncoding.EncodeToString([]byte(password))
 
-	DB.Create(&User{
+	client.Table("users").Create(&User{
 		Name:     name,
 		Password: pass,
 		Mobile:   mobile,

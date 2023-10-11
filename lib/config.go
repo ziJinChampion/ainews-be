@@ -25,6 +25,7 @@ type ServerConfig struct {
 	RedisIndex     string
 	JwtSecret      string
 	JwtTokenExpire int64
+	PageSize       int
 }
 
 func LoadServerConfig() ServerConfig {
@@ -35,6 +36,12 @@ func LoadServerConfig() ServerConfig {
 	if err != nil {
 		log.Fatal(2, "Fail to parse 'conf/app.ini': %v", err)
 	}
+
+	app, err := Cfg.GetSection("app")
+	if err != nil {
+		log.Fatal(2, "Fail to get section 'app': %v", err)
+	}
+
 	//server配置节点读取
 	server, err := Cfg.GetSection("server")
 	if err != nil {
@@ -78,6 +85,7 @@ func LoadServerConfig() ServerConfig {
 		RedisIndex:     redis.Key("INDEX").MustString(""),
 		JwtSecret:      jwt.Key("JWTSECRET").MustString(""),
 		JwtTokenExpire: jwt.Key("TOKEN_EXPIRE").MustInt64(0),
+		PageSize:       app.Key("PAGE_SIZE").MustInt(10),
 	}
 
 	return Config

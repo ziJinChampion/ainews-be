@@ -5,11 +5,12 @@ import (
 	"net/http"
 
 	"github.com/southwind/ainews/lib"
+	"github.com/southwind/ainews/model"
 	"github.com/southwind/ainews/routers"
 )
 
 func main() {
-
+	model.InitDB(lib.LoadServerConfig())
 	router := routers.InitRouter()
 
 	s := &http.Server{
