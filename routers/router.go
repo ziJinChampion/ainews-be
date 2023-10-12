@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/southwind/ainews/lib"
+	"github.com/southwind/ainews/middleware/jwt"
 	v1 "github.com/southwind/ainews/routers/v1"
 )
 
@@ -16,14 +17,17 @@ func InitRouter() *gin.Engine {
 
 	gin.SetMode(lib.LoadServerConfig().RunMode)
 
-	apiv1 := r.Group("/api/v1")
+	userApi := r.Group("/")
 	{
+		userApi.POST("/login", v1.Login)
+		userApi.POST("/register", v1.Register)
+		userApi.POST("/find-password", v1.FindPassword)
+	}
 
-		apiv1.POST("/login", v1.Login)
-		apiv1.POST("/register", v1.Register)
-		apiv1.POST("/find-password", v1.FindPassword)
+	apiv1 := r.Group("/api/v1")
+	apiv1.Use(jwt.JWT())
+	{
 		apiv1.GET("/info", v1.GetUserInfo)
-
 	}
 
 	return r

@@ -8,11 +8,16 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/southwind/ainews/model"
 	"github.com/southwind/ainews/pkg/e"
+	"github.com/southwind/ainews/pkg/utils"
 )
 
 func Login(c *gin.Context) {
-	name := c.Query("name")
-	password := c.Query("password")
+	data, _ := c.GetRawData()
+	var body map[string]string
+	json.Unmarshal(data, &body)
+
+	name := body["name"]
+	password := body["password"]
 
 	valid := validation.Validation{}
 	valid.Required(name, "name").Message("Must fill UserName")
@@ -21,16 +26,26 @@ func Login(c *gin.Context) {
 	valid.MaxSize(password, 30, "password").Message("Password can not over than 30 character ")
 
 	code := e.INVALID_PARAMS
+	res := make(map[string]interface{})
 
 	if !valid.HasErrors() {
 		if model.ValidUserInfo(name, password) {
 			code = e.SUCCESS
+			tokenStr, err := utils.GenerateToken(name, password)
+			if err != nil {
+				code = e.ERROR_AUTH_TOKEN
+			} else {
+				res["token"] = tokenStr
+			}
+		} else {
+			code = e.ERROR_AUTH
 		}
 	}
 
 	c.JSON(http.StatusOK, gin.H{
 		"code":    code,
 		"message": "Login Success",
+		"data":    res,
 	})
 
 }
