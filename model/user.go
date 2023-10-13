@@ -1,6 +1,10 @@
 package model
 
-import "encoding/base64"
+import (
+	"encoding/base64"
+
+	"github.com/southwind/ainews/pkg/constant"
+)
 
 type User struct {
 	Model
@@ -9,7 +13,7 @@ type User struct {
 	Password string `json:"password"`
 	Mobile   string `json:"mobile"`
 	Email    string `json:"email"`
-	UserRole string `json:"user_role"`
+	UserRole string `json:"user_role" gorm:"column:user_role"`
 	Grade    int    `json:"grade"`
 }
 
@@ -35,6 +39,8 @@ func RegisterUser(name, password, mobile, email string) (bool, error) {
 		Password: pass,
 		Mobile:   mobile,
 		Email:    email,
+		UserRole: constant.NORMAL_USER,
+		Grade:    1,
 	}).Error
 
 	return true, err

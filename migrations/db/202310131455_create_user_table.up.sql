@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS users(
    password VARCHAR (50) NOT NULL,
    email VARCHAR (50) ,
    mobile VARCHAR (50) ,
-   user_role VARCHAR NOT NULL default 0,
+   user_role VARCHAR(30) NOT NULL default 'NORMAL_USER',
    grade int NOT NULL default 1,
    created_at TIMESTAMP NOT NULL default CURRENT_TIMESTAMP,
    updated_at TIMESTAMP NOT NULL default CURRENT_TIMESTAMP,
