@@ -1,0 +1,13 @@
+version: '1'
+services:
+  db:
+    image: postgres:14.1
+    ports:
+      - 5438:5432
+    environment:
+      POSTGRES_PASSWORD: 'southwind'
+      POSTGRES_USER: 'southwind'
+      POSTGRES_DB: 'ainews'
+
+volumes:
+  database_data:
