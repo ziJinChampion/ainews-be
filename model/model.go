@@ -5,6 +5,9 @@ import (
 	"log"
 	"time"
 
+	"github.com/golang-migrate/migrate/v4"
+	migratePg "github.com/golang-migrate/migrate/v4/database/postgres"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"github.com/southwind/ainews/lib"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -44,4 +47,44 @@ func InitDB(conf lib.ServerConfig) {
 	conn.SetConnMaxLifetime(1000)
 
 	fmt.Println("database init on host ", conf.Host)
+}
+
+func MigrateDb(conf lib.ServerConfig) {
+
+	var err error
+	dsn := fmt.Sprintf("host=%v user=%v password=%v dbname=%v port=5438 sslmode=disable TimeZone=Asia/Shanghai",
+		conf.Host,
+		conf.User,
+		conf.Password,
+		conf.DbName,
+	)
+	client, _ = gorm.Open(postgres.Open(dsn), &gorm.Config{
+		NamingStrategy: schema.NamingStrategy{
+			TablePrefix:   "ai_",
+			SingularTable: true,
+			NoLowerCase:   false,
+		},
+	})
+	if err != nil {
+		log.Fatal(2, err)
+	}
+
+	conn, _ := client.DB()
+
+	driver, err := migratePg.WithInstance(conn, &migratePg.Config{})
+	if err != nil {
+		log.Fatal("database migration instance created failed", err)
+	}
+	m, err := migrate.NewWithDatabaseInstance(
+		"file://migrations/db",
+		"postgres", driver)
+	if err != nil {
+		log.Fatal("database migration failed", err)
+	}
+	if err := m.Up(); err != nil && err != migrate.ErrNoChange {
+		log.Fatal("database migration up failed", err)
+	} else {
+		log.Println("database migration up success")
+	}
+
 }

@@ -11,6 +11,8 @@ import (
 
 func main() {
 	model.InitDB(lib.LoadServerConfig())
+	migrateDB()
+
 	router := routers.InitRouter()
 
 	s := &http.Server{
@@ -22,4 +24,9 @@ func main() {
 	}
 
 	s.ListenAndServe()
+
+}
+
+func migrateDB() {
+	model.MigrateDb(lib.LoadServerConfig())
 }

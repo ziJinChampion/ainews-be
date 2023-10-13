@@ -27,9 +27,9 @@ func Login(c *gin.Context) {
 
 	code := e.INVALID_PARAMS
 	res := make(map[string]interface{})
-
+	message := "Login Success"
 	if !valid.HasErrors() {
-		if model.ValidUserInfo(name, password) {
+		if ok, err := model.ValidUserInfo(name, password); ok && err == nil {
 			code = e.SUCCESS
 			tokenStr, err := utils.GenerateToken(name, password)
 			if err != nil {
@@ -37,14 +37,18 @@ func Login(c *gin.Context) {
 			} else {
 				res["token"] = tokenStr
 			}
+		} else if err != nil {
+			code = e.ERROR
+			message = err.Error()
 		} else {
 			code = e.ERROR_AUTH
+			message = "UserName or Password is wrong"
 		}
 	}
 
 	c.JSON(http.StatusOK, gin.H{
 		"code":    code,
-		"message": "Login Success",
+		"message": message,
 		"data":    res,
 	})
 
@@ -80,16 +84,28 @@ func Register(c *gin.Context) {
 		return
 	}
 
-	if model.GetUserInfo(map[string]string{"name": name}).Id > 0 {
+	if u, err := model.GetUserInfo(map[string]string{"user_name": name}); err == nil && u.Id > 0 {
 
 		c.JSON(http.StatusBadRequest, gin.H{
 			"code":    e.INVALID_PARAMS,
 			"message": "this user name already being used",
 		})
 		return
+	} else if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"code":    e.ERROR,
+			"message": err.Error(),
+		})
+		return
 	}
 
-	model.RegisterUser(name, password, mobile, email)
+	if _, err := model.RegisterUser(name, password, mobile, email); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"code":    e.ERROR,
+			"message": err.Error(),
+		})
+		return
+	}
 
 	c.JSON(http.StatusOK, gin.H{
 		"code":    e.SUCCESS,
