@@ -21,3 +21,5 @@ go mod download
 ```bash
 go run main.go
 ```
+
+And before you run this project, you need to create a pg database in your local machine. I will add docekr-compose file later. Thank you.
