@@ -1,6 +1,8 @@
 package utils
 
 import (
+	"errors"
+	"strings"
 	"time"
 
 	jwt "github.com/golang-jwt/jwt/v5"
@@ -31,7 +33,16 @@ func GenerateToken(username, password string) (string, error) {
 	token, err := tokenClaims.SignedString(jwtSecret)
 	return token, err
 }
+
+func (c *Claims) Valid() error {
+	if time.Now().After(c.ExpiresAt.Time) {
+		return errors.New("this token has expired")
+	}
+	return nil
+}
+
 func ParseToken(token string) (*Claims, error) {
+	token = strings.Fields(token)[1]
 	tokenClaims, err := jwt.ParseWithClaims(token, &Claims{}, func(token *jwt.Token) (interface{}, error) {
 		return jwtSecret, nil
 	})

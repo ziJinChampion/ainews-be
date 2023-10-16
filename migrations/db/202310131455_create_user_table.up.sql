@@ -8,5 +8,5 @@ CREATE TABLE IF NOT EXISTS users(
    grade int NOT NULL default 1,
    created_at TIMESTAMP NOT NULL default CURRENT_TIMESTAMP,
    updated_at TIMESTAMP NOT NULL default CURRENT_TIMESTAMP,
-   deleted_at TIMESTAMP NOT NULL default CURRENT_TIMESTAMP
+   deleted_at TIMESTAMP 
 );

@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS tags(
 
    created_at TIMESTAMP NOT NULL default CURRENT_TIMESTAMP,
    updated_at TIMESTAMP NOT NULL default CURRENT_TIMESTAMP,
-   deleted_at TIMESTAMP NOT NULL default CURRENT_TIMESTAMP
+   deleted_at TIMESTAMP
 );
 
 
@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS articles(
 
    created_at TIMESTAMP NOT NULL default CURRENT_TIMESTAMP,
    updated_at TIMESTAMP NOT NULL default CURRENT_TIMESTAMP,
-   deleted_at TIMESTAMP NOT NULL default CURRENT_TIMESTAMP
+   deleted_at TIMESTAMP 
 );
 
 

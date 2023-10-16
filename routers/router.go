@@ -28,6 +28,8 @@ func InitRouter() *gin.Engine {
 	apiv1.Use(jwt.JWT())
 	{
 		apiv1.GET("/info", v1.GetUserInfo)
+		apiv1.GET("/tags", v1.GetAllTags)
+		apiv1.POST("/tags", v1.CreateNewTag)
 	}
 
 	return r

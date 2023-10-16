@@ -20,3 +20,12 @@ func CreateNewTag(name, description string) (bool, error) {
 
 	return true, err
 }
+
+func CheckTagIfExists(name string) (bool, error) {
+	var tag Tag
+	err := client.Table("tags").Where("tag_name = ?", name).Find(&tag).Error
+	if err != nil {
+		return false, err
+	}
+	return tag.Id > 0, nil
+}

@@ -25,7 +25,7 @@ func GetUserInfo(maps interface{}) (user User, err error) {
 func ValidUserInfo(name, password string) (bool, error) {
 	var user User
 	pass := base64.StdEncoding.EncodeToString([]byte(password))
-	err := client.Table("users").Select("id").Where("user_name = ? and password = ?", name, pass).First(&user).Error
+	err := client.Table("users").Select("id").Where("user_name = ? and password = ?", name, pass).Find(&user).Error
 
 	return user.Id > 0, err
 }
