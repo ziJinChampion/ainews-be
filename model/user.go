@@ -22,12 +22,12 @@ func GetUserInfo(maps interface{}) (user User, err error) {
 	return
 }
 
-func ValidUserInfo(name, password string) (bool, error) {
+func ValidUserInfo(name, password string) (User, error) {
 	var user User
 	pass := base64.StdEncoding.EncodeToString([]byte(password))
-	err := client.Table("users").Select("id").Where("user_name = ? and password = ?", name, pass).Find(&user).Error
+	err := client.Table("users").Where("user_name = ? and password = ?", name, pass).Find(&user).Error
 
-	return user.Id > 0, err
+	return user, err
 }
 
 func RegisterUser(name, password, mobile, email string) (bool, error) {

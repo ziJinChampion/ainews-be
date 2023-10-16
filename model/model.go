@@ -33,7 +33,6 @@ func InitDB(conf lib.ServerConfig) {
 	)
 	client, _ = gorm.Open(postgres.Open(dsn), &gorm.Config{
 		NamingStrategy: schema.NamingStrategy{
-			TablePrefix:   "ai_",
 			SingularTable: true,
 			NoLowerCase:   false,
 		},

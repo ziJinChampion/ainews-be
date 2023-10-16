@@ -64,3 +64,19 @@ func CreateNewTag(c *gin.Context) {
 		"msg":  "Create Tag Success",
 	})
 }
+
+func DeleteTag(c *gin.Context) {
+	var id int
+	c.ShouldBindUri(&id)
+	if _, err := model.DeleteTag(id); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"code": e.ERROR,
+			"msg":  err.Error(),
+		})
+	} else {
+		c.JSON(http.StatusOK, gin.H{
+			"code": e.SUCCESS,
+			"msg":  "Delete Tag Success",
+		})
+	}
+}

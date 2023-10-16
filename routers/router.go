@@ -32,5 +32,11 @@ func InitRouter() *gin.Engine {
 		apiv1.POST("/tags", v1.CreateNewTag)
 	}
 
+	adminApi := r.Group("/api/admin")
+	adminApi.Use(jwt.AdminJWT())
+	{
+		adminApi.DELETE("/tags/:id", v1.DeleteTag)
+	}
+
 	return r
 }

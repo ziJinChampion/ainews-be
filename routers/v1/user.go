@@ -1,7 +1,7 @@
 package v1
 
 import (
-	"encoding/json"
+	"log"
 	"net/http"
 
 	"github.com/astaxie/beego/validation"
@@ -11,13 +11,22 @@ import (
 	"github.com/southwind/ainews/pkg/utils"
 )
 
-func Login(c *gin.Context) {
-	data, _ := c.GetRawData()
-	var body map[string]string
-	json.Unmarshal(data, &body)
+type LoginRequest struct {
+	Name     string `json:"name"`
+	Password string `json:"password"`
+}
 
-	name := body["name"]
-	password := body["password"]
+func Login(c *gin.Context) {
+	var loginReq LoginRequest
+	if err := c.ShouldBindJSON(&loginReq); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"code": e.INVALID_PARAMS,
+			"msg":  err.Error(),
+		})
+		return
+	}
+	name := loginReq.Name
+	password := loginReq.Password
 
 	valid := validation.Validation{}
 	valid.Required(name, "name").Message("Must fill UserName")
@@ -29,9 +38,10 @@ func Login(c *gin.Context) {
 	res := make(map[string]interface{})
 	message := "Login Success"
 	if !valid.HasErrors() {
-		if ok, err := model.ValidUserInfo(name, password); ok && err == nil {
+		if user, err := model.ValidUserInfo(name, password); user.Id > 0 && err == nil {
 			code = e.SUCCESS
-			tokenStr, err := utils.GenerateToken(name, password)
+			log.Default().Printf("user info: %v", user)
+			tokenStr, err := utils.GenerateToken(user.Name, user.UserRole, user.Email, user.Mobile)
 			if err != nil {
 				code = e.ERROR_AUTH_TOKEN
 			} else {
@@ -54,17 +64,28 @@ func Login(c *gin.Context) {
 
 }
 
+type RegisterRequest struct {
+	Name     string `json:"name"`
+	Password string `json:"password"`
+	Mobile   string `json:"mobile"`
+	Email    string `json:"email"`
+}
+
 func Register(c *gin.Context) {
 
-	data, _ := c.GetRawData()
+	var registerRequest RegisterRequest
 
-	var body map[string]string
-	json.Unmarshal(data, &body)
-
-	name := body["name"]
-	password := body["password"]
-	mobile := body["mobile"]
-	email := body["email"]
+	if err := c.ShouldBindJSON(&registerRequest); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"code": e.INVALID_PARAMS,
+			"msg":  err.Error(),
+		})
+		return
+	}
+	name := registerRequest.Name
+	password := registerRequest.Password
+	mobile := registerRequest.Mobile
+	email := registerRequest.Email
 
 	valid := validation.Validation{}
 	valid.Required(name, "name").Message("Must fill UserName")

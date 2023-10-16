@@ -14,16 +14,20 @@ var jwtSecret = []byte(lib.LoadServerConfig().JwtSecret)
 
 type Claims struct {
 	Username string `json:"username"`
-	Password string `json:"password"`
+	Role     string `json:"role"`
+	Email    string `json:"email"`
+	Mobile   string `json:"mobile"`
 	jwt.RegisteredClaims
 }
 
-func GenerateToken(username, password string) (string, error) {
+func GenerateToken(username, role, email, mobile string) (string, error) {
 	nowTime := time.Now()
 	expireTime := nowTime.Add(3 * time.Hour)
 	claims := Claims{
 		username,
-		password,
+		role,
+		email,
+		mobile,
 		jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(expireTime),
 			Issuer:    "ai-news",

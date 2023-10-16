@@ -29,3 +29,8 @@ func CheckTagIfExists(name string) (bool, error) {
 	}
 	return tag.Id > 0, nil
 }
+
+func DeleteTag(id int) (bool, error) {
+	err := client.Table("tags").Where("id = ?", id).Delete(&Tag{}).Error
+	return true, err
+}
