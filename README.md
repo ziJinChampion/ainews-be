@@ -15,7 +15,7 @@ After I finish the backend, I will start to build the frontend. I will use React
 If you want to run this project in your local machine, you need to run this command in your terminal.
 
 ```bash
-go mod download
+go get -u 
 ```
 
 ```bash
