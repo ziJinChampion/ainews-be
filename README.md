@@ -8,7 +8,7 @@
 
 ## Next Step
 
-After I finish the backend, I will start to build the frontend. I will use React to build the frontend. I will try to finish it as soon as possible. Thank you. And I will integrate some Ai tools into this project, such as chatbot and images generation. 
+After I finish the backend, I will start to build the frontend. I will use React to build the frontend. I will try to finish it as soon as possible. Thank you. And I will integrate some Ai tools into this project, such as chatbot and images generator. 
 
 ## Quick Start
 
