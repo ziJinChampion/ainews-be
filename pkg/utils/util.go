@@ -26,3 +26,13 @@ func Getpage(c *gin.Context) int {
 	}
 	return result
 }
+
+func GetCurrentUser(c *gin.Context) (result Claims, err error) {
+	tokenStr := c.GetHeader("Authorization")
+	claims, err := ParseToken(tokenStr)
+	if err != nil {
+		return
+	}
+	result = *claims
+	return
+}

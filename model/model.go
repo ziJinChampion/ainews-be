@@ -3,6 +3,7 @@ package model
 import (
 	"fmt"
 	"log"
+	"os"
 	"time"
 
 	"github.com/golang-migrate/migrate/v4"
@@ -11,6 +12,7 @@ import (
 	"github.com/southwind/ainews/lib"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
 )
 
@@ -31,11 +33,22 @@ func InitDB(conf lib.ServerConfig) {
 		conf.Password,
 		conf.DbName,
 	)
+	newLogger := logger.New(
+		log.New(os.Stdout, "\r\n", log.LstdFlags),
+		logger.Config{
+			SlowThreshold:             time.Second, // Slow SQL threshold
+			LogLevel:                  logger.Info, // Log level
+			IgnoreRecordNotFoundError: true,        // Ignore ErrRecordNotFound error for logger
+			ParameterizedQueries:      true,        // Don't include params in the SQL log
+			Colorful:                  false,       // Disable color
+		},
+	)
 	client, _ = gorm.Open(postgres.Open(dsn), &gorm.Config{
 		NamingStrategy: schema.NamingStrategy{
 			SingularTable: true,
 			NoLowerCase:   false,
 		},
+		Logger: newLogger,
 	})
 	if err != nil {
 		log.Fatal(2, err)

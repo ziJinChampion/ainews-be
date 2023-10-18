@@ -41,7 +41,7 @@ func Login(c *gin.Context) {
 		if user, err := model.ValidUserInfo(name, password); user.Id > 0 && err == nil {
 			code = e.SUCCESS
 			log.Default().Printf("user info: %v", user)
-			tokenStr, err := utils.GenerateToken(user.Name, user.UserRole, user.Email, user.Mobile)
+			tokenStr, err := utils.GenerateToken(user.Name, user.UserRole, user.Email, user.Mobile, user.Id)
 			if err != nil {
 				code = e.ERROR_AUTH_TOKEN
 			} else {

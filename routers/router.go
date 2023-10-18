@@ -23,13 +23,17 @@ func InitRouter() *gin.Engine {
 		userApi.POST("/register", v1.Register)
 		userApi.POST("/find-password", v1.FindPassword)
 	}
-
+	apiv1WithoutAuth := r.Group("/api/v1")
+	{
+		apiv1WithoutAuth.GET("/tags", v1.GetAllTags)
+		apiv1WithoutAuth.GET("/articles", v1.GetAllArticles)
+	}
 	apiv1 := r.Group("/api/v1")
 	apiv1.Use(jwt.JWT())
 	{
 		apiv1.GET("/info", v1.GetUserInfo)
-		apiv1.GET("/tags", v1.GetAllTags)
 		apiv1.POST("/tags", v1.CreateNewTag)
+		apiv1.POST("/articles", v1.CreateNewArticle)
 	}
 
 	adminApi := r.Group("/api/admin")

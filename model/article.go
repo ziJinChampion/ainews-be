@@ -1,6 +1,10 @@
 package model
 
-import "gorm.io/gorm"
+import (
+	"errors"
+
+	"gorm.io/gorm"
+)
 
 type Article struct {
 	Model
@@ -8,17 +12,16 @@ type Article struct {
 	Title    string `gorm:"column:title" json:"article_title"`
 	Content  string `gorm:"column:content" json:"article_content"`
 	AuthorId int    `gorm:"column:author_id" json:"article_author"`
-	TagId    int    `gorm:"column:tag_id" json:"tag_id"`
 	IsHidden bool   `gorm:"column:is_hidden" json:"is_hidden"`
 }
 
-type ArticleVO struct {
-	Id         int      `json:"id"`
-	Title      string   `json:"article_title"`
-	Content    string   `json:"article_content"`
-	AuthorName string   `json:"article_author"`
-	Tags       []string `json:"tags"`
-	IsHidden   bool     `json:"is_hidden"`
+type ArticleResponse struct {
+	Id        int      `json:"id"`
+	Title     string   `json:"article_title"`
+	Content   string   `json:"article_content"`
+	Author    string   `json:"article_author"`
+	Tags      []string `json:"tags"`
+	UpdatedAt string   `json:"updated_at"`
 }
 
 type ArticleTag struct {
@@ -28,8 +31,13 @@ type ArticleTag struct {
 	TagId     int `gorm:"column:tag_id"`
 }
 
-func GetAllArticles() (articles []Article, err error) {
-	err = client.Table("articles").Find(&articles).Error
+func GetAllArticles() (articles []ArticleResponse, err error) {
+	err = client.Table("articles").Select("articles.id, articles.title, articles.content, articles.updated_at, users.user_name as author, ARRAY_AGG(t.tag_name) as tags").
+		Joins("left join users on users.id = articles.author_id").
+		Joins("left join article_tag on articles.id = article_tag.article_id").
+		Joins("left join tags t on article_tag.tag_id = t.id").
+		Group("articles.id").
+		Group("users.user_name").Scan(&articles).Error
 	return
 }
 
@@ -55,11 +63,15 @@ func CreateNewArticle(title, content string, authorId int, tagIds []int) (bool, 
 			AuthorId: authorId,
 			IsHidden: false}
 
-		if err = client.Table("articles").Create(&article).Error; err != nil {
+		if err = tx.Table("articles").Create(&article).Error; err != nil {
 			return err
 		}
 		for _, tagId := range tagIds {
-			if err = client.Table("article_tag").Create(&ArticleTag{
+			var tag Tag
+			if err = tx.Table("tags").Where("id = ?", tagId).First(&tag).Error; err != nil {
+				return errors.New("tag not found")
+			}
+			if err = tx.Table("article_tag").Create(&ArticleTag{
 				ArticleId: article.Id,
 				TagId:     tagId,
 			}).Error; err != nil {
