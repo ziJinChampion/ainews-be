@@ -31,6 +31,16 @@ type PublicUser struct {
 	Grade int    `json:"grade"`
 }
 
+func (u *User) PublicUser() *PublicUser {
+	return &PublicUser{
+		Id:    u.Id,
+		Name:  u.Name,
+		Email: u.Email,
+		Role:  u.Role,
+		Grade: u.Grade,
+	}
+}
+
 func (u *User) BeforeSave(tx *gorm.DB) error {
 	hashPassword, err := security.Hash(u.Password)
 	if err != nil {

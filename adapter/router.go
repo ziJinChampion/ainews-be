@@ -30,10 +30,17 @@ func InitRouter() *gin.Engine {
 	daos.Migrate()
 
 	users := v1.NewUsers(daos.User)
+	tags := v1.NewTag(daos.Tag)
 
 	{
 		indexApi.POST("/login", users.Login)
 		indexApi.POST("/register", users.Register)
+		indexApi.GET("/tags", tags.GetTags)
+	}
+	authApi := r.Group("/api")
+	authApi.Use(middleware.JWT())
+	{
+		authApi.POST("/tags", tags.CreateTag)
 	}
 	// apiv1WithoutAuth := r.Group("/api/v1")
 	// {

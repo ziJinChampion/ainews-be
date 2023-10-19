@@ -20,12 +20,10 @@ func JWT() gin.HandlerFunc {
 		if tokenStr == "" {
 			code = e.ERROR_AUTH_CHECK_TOKEN_FAIL
 		} else {
-			claims, err := security.ParseToken(tokenStr)
+			_, err := security.ParseToken(tokenStr)
 			if err != nil {
 				code = e.ERROR_AUTH_CHECK_TOKEN_FAIL
-				log.Fatal(err)
-			} else if claims.ExpiresAt.Before(time.Now()) {
-				code = e.ERROR_AUTH_CHECK_TOKEN_TIMEOUT
+				log.Println("[error]token error ", err)
 			}
 		}
 		if code != e.SUCCESS {
