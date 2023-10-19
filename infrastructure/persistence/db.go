@@ -40,6 +40,7 @@ func NewDAO(conf lib.ServerConfig) (*DAO, error) {
 	)
 	client, err := gorm.Open(postgres.Open(DBURL), &gorm.Config{
 		NamingStrategy: schema.NamingStrategy{
+			TablePrefix:   "ai_",
 			SingularTable: true,
 			NoLowerCase:   false,
 		},

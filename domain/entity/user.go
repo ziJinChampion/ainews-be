@@ -8,6 +8,7 @@ import (
 
 	"github.com/southwind/ainews/common/constant"
 	"github.com/southwind/ainews/utils/security"
+	"gorm.io/gorm"
 )
 
 type User struct {
@@ -30,7 +31,7 @@ type PublicUser struct {
 	Grade int    `json:"grade"`
 }
 
-func (u *User) BeforeSave() error {
+func (u *User) BeforeSave(tx *gorm.DB) error {
 	hashPassword, err := security.Hash(u.Password)
 	if err != nil {
 		return err

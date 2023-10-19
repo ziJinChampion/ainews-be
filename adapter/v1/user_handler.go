@@ -62,8 +62,14 @@ func (u *Users) Register(c *gin.Context) {
 				return
 			}
 		}
-
+	} else {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"code": code.INVALID_PARAMS,
+			"msg":  "User already exists",
+		})
+		return
 	}
+
 	c.JSON(http.StatusOK, gin.H{
 		"code": code.SUCCESS,
 		"msg":  "Register Success",
