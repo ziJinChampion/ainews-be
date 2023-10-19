@@ -4,17 +4,17 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/southwind/ainews/adapter"
 	"github.com/southwind/ainews/lib"
 	"github.com/southwind/ainews/model"
-	"github.com/southwind/ainews/routers"
 )
 
 func main() {
 	model.InitDB(lib.LoadServerConfig())
-	migrateDB()
 
-	router := routers.InitRouter()
+	router := adapter.InitRouter()
 
+	
 	s := &http.Server{
 		Addr:           fmt.Sprintf(":%d", lib.LoadServerConfig().HTTPPort),
 		Handler:        router,
@@ -25,8 +25,4 @@ func main() {
 
 	s.ListenAndServe()
 
-}
-
-func migrateDB() {
-	model.MigrateDb(lib.LoadServerConfig())
 }
