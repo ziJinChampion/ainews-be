@@ -70,7 +70,7 @@ func (t *Tags) CreateTag(c *gin.Context) {
 }
 
 func (t *Tags) GetTags(c *gin.Context) {
-	name := c.Param("name")
+	name := c.Query("name")
 	var queryMap = make(map[string]string)
 	if name != "" {
 		queryMap["name"] = name
