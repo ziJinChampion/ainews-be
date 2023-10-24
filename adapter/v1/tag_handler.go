@@ -33,7 +33,7 @@ func (t *Tags) CreateTag(c *gin.Context) {
 		})
 		return
 	}
-	var queryMap = make(map[string]string)
+	var queryMap = make(map[string]interface{})
 	queryMap["name"] = req.Name
 	var tags []*entity.Tag
 	var err error
@@ -71,7 +71,7 @@ func (t *Tags) CreateTag(c *gin.Context) {
 
 func (t *Tags) GetTags(c *gin.Context) {
 	name := c.Query("name")
-	var queryMap = make(map[string]string)
+	var queryMap = make(map[string]interface{})
 	if name != "" {
 		queryMap["name"] = name
 	}

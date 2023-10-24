@@ -11,14 +11,14 @@ type tagApp struct {
 
 type TagAppInterface interface {
 	CreateTag(*entity.Tag) (*entity.Tag, error)
-	GetTags(map[string]string) ([]*entity.Tag, error)
+	GetTags(map[string]interface{}) ([]*entity.Tag, error)
 	UpdateTag(*entity.Tag) (*entity.Tag, error)
 	DeleteTag(id int) error
 }
 
 var _ TagAppInterface = &tagApp{}
 
-func (t *tagApp) GetTags(m map[string]string) ([]*entity.Tag, error) {
+func (t *tagApp) GetTags(m map[string]interface{}) ([]*entity.Tag, error) {
 	return t.tagRepo.GetTags(m)
 }
 

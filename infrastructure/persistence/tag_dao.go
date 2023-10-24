@@ -17,7 +17,7 @@ func (t *TagDAO) DeleteTag(id int) error {
 	return nil
 }
 
-func (t *TagDAO) GetTags(m map[string]string) (tag []*entity.Tag, err error) {
+func (t *TagDAO) GetTags(m map[string]interface{}) (tag []*entity.Tag, err error) {
 	if err = t.db.Where(m).Find(&tag).Error; err != nil {
 		return nil, err
 	}

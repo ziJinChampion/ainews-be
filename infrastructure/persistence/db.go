@@ -17,9 +17,10 @@ import (
 )
 
 type DAO struct {
-	User repository.UserRepository
-	Tag  repository.TagRepository
-	db   *gorm.DB
+	User    repository.UserRepository
+	Tag     repository.TagRepository
+	Article repository.ArticleRepository
+	db      *gorm.DB
 }
 
 func NewDAO(conf lib.ServerConfig) (*DAO, error) {
@@ -54,9 +55,10 @@ func NewDAO(conf lib.ServerConfig) (*DAO, error) {
 	conn.SetMaxIdleConns(10)
 	conn.SetConnMaxLifetime(1000)
 	return &DAO{
-		User: NewUserDAO(client),
-		Tag:  NewTagDAO(client),
-		db:   client,
+		User:    NewUserDAO(client),
+		Tag:     NewTagDAO(client),
+		Article: NewArticleDAO(client),
+		db:      client,
 	}, nil
 
 }
@@ -67,5 +69,5 @@ func (d *DAO) Close() error {
 }
 
 func (d *DAO) Migrate() error {
-	return d.db.AutoMigrate(&entity.User{}, &entity.Tag{})
+	return d.db.AutoMigrate(&entity.User{}, &entity.Tag{}, &entity.Article{}, &entity.ArticleTag{})
 }
