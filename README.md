@@ -23,3 +23,9 @@ go run main.go
 ```
 
 And before you run this project, you need to create a pg database in your local machine. I will add docekr-compose file later. Thank you.
+
+
+## 一点关于DDD的想法
+这里没有在代码结构上分拆domain, 把adapter domainService entity等都放在各自的domain下面，后面可能会重构，把各自domain的各种东西都放在同一个目录下面。
+目前的adapter中router承担的是路由转发的作用， handler做业务处理，把各个domain聚合到一起，application会做一些domain相关的校验或是一些domain相关的逻辑处理，repository和dao只做简单的CRUD，不把任何业务放在sql里面.当然这只是我的一点看法，有问题欢迎讨论
+
