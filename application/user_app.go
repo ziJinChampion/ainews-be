@@ -13,7 +13,8 @@ var _ UserAppInterface = &userApp{}
 
 type UserAppInterface interface {
 	SaveUser(*entity.User) (*entity.User, map[string]string)
-	GetUsers() ([]entity.User, error)
+	GetUsers(map[string]interface{}) ([]entity.User, error)
+
 	GetUser(string) (*entity.User, error)
 	GetUserByNameAndPassword(name, passwod string) (*entity.User, map[string]string)
 }
@@ -26,8 +27,8 @@ func (u *userApp) GetUser(name string) (*entity.User, error) {
 	return u.userRepo.GetUser(name)
 }
 
-func (u *userApp) GetUsers() ([]entity.User, error) {
-	return u.userRepo.GetUsers()
+func (u *userApp) GetUsers(m map[string]interface{}) ([]entity.User, error) {
+	return u.userRepo.GetUsers(m)
 }
 
 func (u *userApp) GetUserByNameAndPassword(name, password string) (*entity.User, map[string]string) {

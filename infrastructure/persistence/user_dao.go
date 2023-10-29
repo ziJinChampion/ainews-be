@@ -14,9 +14,9 @@ type UserDAO struct {
 
 var _ repository.UserRepository = &UserDAO{}
 
-func (r *UserDAO) GetUsers() ([]entity.User, error) {
+func (r *UserDAO) GetUsers(m map[string]interface{}) ([]entity.User, error) {
 	var users []entity.User
-	err := r.db.Find(&users).Error
+	err := r.db.Where(m).Find(&users).Error
 	if err != nil {
 		return nil, err
 	}

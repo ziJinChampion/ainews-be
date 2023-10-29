@@ -31,12 +31,13 @@ func InitRouter() *gin.Engine {
 
 	users := v1.NewUsers(daos.User)
 	tags := v1.NewTag(daos.Tag)
-	articles := v1.NewArticles(daos.Article, daos.Tag)
+	articles := v1.NewArticles(daos.Article, daos.Tag, daos.User)
 
 	{
 		indexApi.POST("/login", users.Login)
 		indexApi.POST("/register", users.Register)
 		indexApi.GET("/tags", tags.GetTags)
+		indexApi.GET("/articles", articles.GetArticles)
 	}
 	authApi := r.Group("/api")
 	authApi.Use(middleware.JWT())

@@ -17,8 +17,8 @@ func (t *ArticleDAO) DeleteArticle(id int) error {
 	return nil
 }
 
-func (t *ArticleDAO) GetArticles(m map[string]string) (article []*entity.Article, err error) {
-	if err = t.db.Where(m).Find(&article).Error; err != nil {
+func (t *ArticleDAO) GetArticles(m map[string]interface{}, pageSize, pageNum int) (article []*entity.Article, err error) {
+	if err = t.db.Where(m).Find(&article).Offset(pageNum - 1*pageSize).Limit(pageSize).Error; err != nil {
 		return nil, err
 	}
 	return article, nil
@@ -48,6 +48,14 @@ func (t *ArticleDAO) UpdateArticle(article *entity.Article) (*entity.Article, er
 		return nil, err
 	}
 	return article, nil
+}
+
+func (t *ArticleDAO) GetArticleTags(articleId int) ([]*entity.ArticleTag, error) {
+	var articleTags []*entity.ArticleTag
+	if err := t.db.Where("article_id = ?", articleId).Find(&articleTags).Error; err != nil {
+		return nil, err
+	}
+	return articleTags, nil
 }
 
 var _ repository.ArticleRepository = &ArticleDAO{}
