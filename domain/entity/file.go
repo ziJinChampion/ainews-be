@@ -1,8 +1,10 @@
 package entity
 
 type File struct {
-	ID        int64
+	Id        int64
 	Name      string
 	Extension string
 	Content   []byte
+	Size      int64
+	Url       string
 }
