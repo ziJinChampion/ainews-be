@@ -7,7 +7,7 @@ import (
 
 	jwt "github.com/golang-jwt/jwt/v5"
 
-	"github.com/southwind/ainews/lib"
+	lib "github.com/southwind/ainews/common/config"
 )
 
 var jwtSecret = []byte(lib.LoadServerConfig().JwtSecret)

@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/southwind/ainews/adapter"
-	"github.com/southwind/ainews/lib"
+	lib "github.com/southwind/ainews/common/config"
 )
 
 func main() {

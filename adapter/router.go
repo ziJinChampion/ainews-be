@@ -5,8 +5,8 @@ import (
 
 	"github.com/southwind/ainews/adapter/middleware"
 	v1 "github.com/southwind/ainews/adapter/v1"
+	lib "github.com/southwind/ainews/common/config"
 	"github.com/southwind/ainews/infrastructure/persistence"
-	"github.com/southwind/ainews/lib"
 )
 
 func InitRouter() *gin.Engine {

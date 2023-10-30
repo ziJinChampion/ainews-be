@@ -7,9 +7,9 @@ import (
 	"time"
 
 	_ "github.com/golang-migrate/migrate/v4/source/file"
+	lib "github.com/southwind/ainews/common/config"
 	"github.com/southwind/ainews/domain/entity"
 	"github.com/southwind/ainews/domain/repository"
-	"github.com/southwind/ainews/lib"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
